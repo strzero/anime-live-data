@@ -1,0 +1,79 @@
+'use client';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useState } from 'react';
+import Link from 'next/link';
+import ShowDetailDialog from './ShowDetailDialog';
+
+export interface Actor {
+  姓名: string; 性别: string; 国籍: string; 证件号: string;
+}
+
+export interface Show {
+  演出名称: string;
+  演出日期: string;
+  演出日期数据?: string[];
+  演出场所: string;
+  举办单位: string;
+  许可事项: string;
+  许可事项类型: string;
+  演员人数: string;
+  场次: string;
+  演出内容: string;
+  审批时间: string;
+  演员名单?: Actor[];
+  详情页URL: string;
+}
+
+export default function ShowTable({ shows }: { shows: Show[] }) {
+  const [openShow, setOpenShow] = useState<Show | null>(null);
+  const rowCount = shows.length;
+
+  const columns: GridColDef[] = [
+    { field: '演出名称', headerName: '演出名称', flex: 6, minWidth: 150 },
+    { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
+    {
+      field: '演出场所',
+      headerName: '演出场所',
+      flex: 6,
+      minWidth: 150,
+      renderCell: params => (
+        <Link href={`/venue/${encodeURIComponent(params.value as string)}`}>
+          {params.value as string}
+        </Link>
+      ),
+    },
+    {
+      field: '操作',
+      headerName: '操作',
+      flex: 1,
+      minWidth: 80,
+      renderCell: params => (
+        <button
+          onClick={() => setOpenShow(params.row as Show)}
+          style={{ color: '#1976d2', background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          查看
+        </button>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <div style={{ height: rowCount > 20 ? 600 : 'auto', width: '100%' }}>
+        <DataGrid
+          rows={shows.map((s, i) => ({ id: i, ...s }))}
+          columns={columns}
+          {...(rowCount > 20
+            ? {
+                initialState: { pagination: { paginationModel: { pageSize: 20, page: 0 } } },
+                pageSizeOptions: [20, 50, 100],
+              }
+            : { autoHeight: true, hideFooter: true })}
+          disableRowSelectionOnClick
+        />
+      </div>
+      {openShow && <ShowDetailDialog show={openShow} onClose={() => setOpenShow(null)} />}
+    </>
+  );
+}
