@@ -1,6 +1,7 @@
 'use client';
 import { useState, useMemo } from 'react';
 import { format, addDays } from 'date-fns';
+import { zhCN } from 'date-fns/locale/zh-CN';
 import ShowTable, { Show } from '@/components/ShowTable';
 import showsData from '@/data/data.json';
 
@@ -58,7 +59,7 @@ export default function TimelinePage() {
         return list.length > 0 ? (
           <div key={key} style={{ marginBottom: 32 }}>
             <h2>
-              {format(d, 'yyyy-MM-dd')} （{format(d, 'EEEE')}）
+              {format(d, 'yyyy-MM-dd')} （{format(d, 'EEEE', { locale: zhCN })}）
             </h2>
             <ShowTable shows={list} />
           </div>
