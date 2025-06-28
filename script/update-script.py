@@ -263,10 +263,11 @@ else:
     info_history = []
 
 # 追加本次记录
-info_history.append(info)
+if info["是否更新"]:
+    info_history.append(info)
 
-# 写回文件
-with open(INFO_FILE, "w", encoding="utf-8") as f:
-    json.dump(info_history, f, ensure_ascii=False, indent=2)
-
+    # 写回文件
+    with open(INFO_FILE, "w", encoding="utf-8") as f:
+        json.dump(info_history, f, ensure_ascii=False, indent=2)
+        
 print(f"更新完成，共 {len(stored_data)} 条记录")
