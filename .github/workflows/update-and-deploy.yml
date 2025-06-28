@@ -52,13 +52,10 @@ jobs:
           git add data/data.json data/info.json
           git commit -m "update: data.json, info.json"
 
-          # 替换 origin URL
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-          # 可选：先拉一下避免冲突
           git pull --ff-only
 
-          # 推送
           git push origin HEAD:main
 
 
