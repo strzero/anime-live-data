@@ -99,7 +99,7 @@ jobs:
         run: |
           sshpass -p "${{ secrets.SERVER_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_SSH_USER }}@${{ secrets.SERVER_SSH_HOST }} << 'EOF'
           cd /opt/anime-live-data
-          docker-compose pull
-          docker-compose up -d
+          docker compose pull
+          docker compose up -d
           docker image prune -f
           EOF
