@@ -28,8 +28,42 @@ export default function ShowTable({ shows }: { shows: Show[] }) {
   const [openShow, setOpenShow] = useState<Show | null>(null);
   const rowCount = shows.length;
 
+  // 找出最新审批时间字符串（假设格式统一，字符串比较即可）
+  const latestApprovalTime = shows.reduce((latest, show) => {
+    return show.审批时间 > latest ? show.审批时间 : latest;
+  }, '');
+
   const columns: GridColDef[] = [
-    { field: '演出名称', headerName: '演出名称', flex: 6, minWidth: 150 },
+    {
+      field: '演出名称',
+      headerName: '演出名称',
+      flex: 6,
+      minWidth: 150,
+      renderCell: params => {
+        const isNew = (params.row as Show).审批时间 === latestApprovalTime;
+        return (
+          <>
+            {params.value}
+            {isNew && (
+              <span
+                style={{
+                  marginLeft: 6,
+                  color: 'red',
+                  fontWeight: 'bold',
+                  fontSize: '0.85em',
+                  border: '1px solid red',
+                  borderRadius: 3,
+                  padding: '0 4px',
+                  userSelect: 'none',
+                }}
+              >
+                new
+              </span>
+            )}
+          </>
+        );
+      },
+    },
     { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
     {
       field: '演出场所',
