@@ -3,7 +3,7 @@ name: Update and Deploy
 on:
   schedule:
     # 每10分钟执行一次
-    - cron: "*/10 * * * *"
+    - cron: "0 */2 * * *"
   push:
     # 只要代码有变动也触发（比如手动push）
     branches:
@@ -36,8 +36,8 @@ jobs:
           git config --global user.email "${{ secrets.GIT_EMAIL }}"
           git config --global user.name "${{ secrets.GIT_NAME }}"
 
-          # 如果data/目录有变动则设置标志
-          if git diff --quiet data; then
+          # 检查和最新提交的差异
+          if git diff --quiet HEAD -- data; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -45,17 +45,18 @@ jobs:
 
       - name: Commit and push if changed
         if: steps.git-diff.outputs.changed == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add data/data.json data/info.json
           git commit -m "update: data.json, info.json"
 
           # 替换 origin URL
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+          # 可选：先拉一下避免冲突
+          git pull --ff-only
 
           # 推送
           git push origin HEAD:main
