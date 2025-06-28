@@ -40,3 +40,10 @@ a {
     color-scheme: dark;
   }
 }
+
+/* 当屏幕宽度小于等于600px时，隐藏右上角更新信息 */
+@media (max-width: 600px) {
+  .last-update {
+    display: none;
+  }
+}

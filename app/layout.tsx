@@ -20,10 +20,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             color: '#fff',
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center'
+            alignItems: 'center',
+            flexWrap: 'wrap' // 如果想在小屏下换行导航
           }}
         >
-          <nav style={{ display: 'flex', gap: 24 }}>
+          <nav style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             <Link href="/" style={{ color: '#fff' }}>首页</Link>
             <Link href="/shows" style={{ color: '#fff' }}>演出列表</Link>
             <Link href="/timeline" style={{ color: '#fff' }}>时间线</Link>
@@ -31,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/performer" style={{ color: '#fff' }}>演出者出演信息</Link>
           </nav>
           {lastInfo && (
-            <div style={{ fontSize: 12 }}>
+            <div className="last-update" style={{ fontSize: 12 }}>
               上次更新时间：{lastInfo.检查时间} | 新增数量：{lastInfo.新增数量}
             </div>
           )}
