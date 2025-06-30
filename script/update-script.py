@@ -16,61 +16,50 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
 }
 
+
 def extract_dates(text):
     """
     从演出日期文本中提取所有 yyyy-mm-dd 格式的日期
-    支持：
-      - 单个日期：2025年7月26日 19:30
-      - 范围同年：2025年7月11日至13日
-      - 范围跨年：2025年10月1日至2026年3月31日
-      - 省略月：2025年7月11日至13日
-      - 完整式：2025年7月11日至7月13日
-      - 多个日期：2025年11月21日、23日
-      - 复杂组合
     """
     date_list = []
     base_year = None
     base_month = None
 
-    # 新的范围正则：结束部分的年/月都可省略
     pattern_range = re.compile(
         r"(\d{4})年(\d{1,2})月(\d{1,2})日[至\-–—]"
-        r"(?:(\d{4})年)?"          # 可选结束年份
-        r"(?:(\d{1,2})月)?"        # 可选结束月份
+        r"(?:(\d{4})年)?"
+        r"(?:(\d{1,2})月)?"
         r"(\d{1,2})日"
     )
-    # 完整日期
-    pattern_full    = re.compile(r"(\d{4})年(\d{1,2})月(\d{1,2})日")
-    # 省略年，带月日
+    pattern_full = re.compile(r"(\d{4})年(\d{1,2})月(\d{1,2})日")
     pattern_partial = re.compile(r"(?<!年)(\d{1,2})月(\d{1,2})日")
-    # 仅数字日
-    pattern_day     = re.compile(r"(?<!月)(?<!年)(?<!\d)(\d{1,2})日")
+    pattern_day = re.compile(r"(?<!月)(?<!年)(?<!\d)(\d{1,2})日")
 
-    # 1. 先处理所有范围
+    # 范围
     for m in pattern_range.finditer(text):
-        y1 = int(m.group(1)); m1 = int(m.group(2)); d1 = int(m.group(3))
+        y1 = int(m.group(1))
+        m1 = int(m.group(2))
+        d1 = int(m.group(3))
         y2 = int(m.group(4)) if m.group(4) else y1
         m2 = int(m.group(5)) if m.group(5) else m1
         d2 = int(m.group(6))
         start = datetime(y1, m1, d1)
-        end   = datetime(y2, m2, d2)
+        end = datetime(y2, m2, d2)
         while start <= end:
             date_list.append(start.strftime("%Y-%m-%d"))
             start += timedelta(days=1)
 
-    # 去掉已处理的范围
     text = pattern_range.sub("", text)
 
-    # 2. 完整日期，更新 base_year, base_month
+    # 完整
     for m in pattern_full.finditer(text):
         y, mo, d = map(int, m.groups())
         date_list.append(f"{y:04d}-{mo:02d}-{d:02d}")
         base_year, base_month = y, mo
 
-    # 去掉已提取的完整日期
     text = pattern_full.sub("", text)
 
-    # 3. 省略年，带月日
+    # 部分
     for m in pattern_partial.finditer(text):
         mo, d = map(int, m.groups())
         y = base_year or datetime.now().year
@@ -79,45 +68,40 @@ def extract_dates(text):
 
     text = pattern_partial.sub("", text)
 
-    # 4. 仅日
+    # 仅日
     for m in pattern_day.finditer(text):
         d = int(m.group(1))
         y = base_year or datetime.now().year
         mo = base_month or 1
         date_list.append(f"{y:04d}-{mo:02d}-{d:02d}")
 
-    # 去重并排序
     return sorted(set(date_list))
 
 
 def parse_detail(url):
-    """解析详情页"""
     resp = session.get(url, headers=headers)
     resp.encoding = "utf-8"
     soup = BeautifulSoup(resp.text, "html.parser")
     content = soup.select_one("div.content")
     if not content:
-        return None  # 无有效内容
+        return None
 
-    # 核心信息
     spans = content.select("span")
     if len(spans) < 2:
-        return None  # 格式不符合
+        return None
 
     受理编号 = spans[0].text.replace("受理编号：", "").strip()
     批文号 = spans[1].text.replace("批文号：", "").strip()
 
-    # 所有表格
     tables = content.find_all("table")
     if len(tables) < 2:
-        return None  # 无表格，跳过
+        return None
 
     main_table = tables[0]
     rows = main_table.find_all("tr")
     if len(rows) < 8:
         return None
 
-    # 注意：每个td位置固定
     cells = {}
     for i, row in enumerate(rows):
         tds = row.find_all("td")
@@ -143,11 +127,9 @@ def parse_detail(url):
         if i == 7:
             cells["演出内容"] = tds[1].text.strip()
 
-    # 审批时间
     time_divs = content.find_all("div", align="right")
     审批时间 = time_divs[-1].text.strip() if time_divs else ""
 
-    # 演员名单
     actor_table = tables[1]
     actor_rows = actor_table.find_all("tr")[1:]
     演员名单 = []
@@ -184,18 +166,18 @@ def parse_detail(url):
         "详情页URL": url
     }
 
-# 加载已有数据
+
 if os.path.exists(JSON_FILE):
     with open(JSON_FILE, "r", encoding="utf-8") as f:
         stored_data = json.load(f)
 else:
     stored_data = []
 
-# 用批文号判断是否已存在
 existing_batch_numbers = set(item.get("批文号", "") for item in stored_data)
 
 new_items = []
 stop_flag = False
+consecutive_existing = 0
 
 for page in range(1, MAX_PAGES + 1):
     print(f"抓取第 {page} 页...")
@@ -228,9 +210,15 @@ for page in range(1, MAX_PAGES + 1):
             continue
 
         if batch_number in existing_batch_numbers:
-            print(f"遇到已存储数据批文号 {batch_number}，停止")
-            stop_flag = True
-            break
+            consecutive_existing += 1
+            print(f"遇到已存储数据批文号 {batch_number}，连续命中 {consecutive_existing}")
+            if consecutive_existing >= 3:
+                print("连续3条已存在，停止")
+                stop_flag = True
+                break
+            continue
+        else:
+            consecutive_existing = 0
 
         print(f"新增: {batch_number}")
         new_items.append(data)
@@ -250,7 +238,6 @@ info = {
     "新增数量": len(new_items)
 }
 
-# 读取历史记录
 if os.path.exists(INFO_FILE):
     with open(INFO_FILE, "r", encoding="utf-8") as f:
         try:
@@ -262,12 +249,9 @@ if os.path.exists(INFO_FILE):
 else:
     info_history = []
 
-# 追加本次记录
 if info["是否更新"]:
     info_history.append(info)
-
-    # 写回文件
     with open(INFO_FILE, "w", encoding="utf-8") as f:
         json.dump(info_history, f, ensure_ascii=False, indent=2)
-        
+
 print(f"更新完成，共 {len(stored_data)} 条记录")
