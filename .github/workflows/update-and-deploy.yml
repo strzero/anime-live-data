@@ -5,14 +5,29 @@ on:
     # 每6小时执行一次
     - cron: "0 */6 * * *"
   push:
-    # 只要代码有变动也触发（比如手动push）
+    # 只要代码有变动也触发
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "选择要执行的任务"
+        required: true
+        default: "update-and-deploy"
+        type: choice
+        options:
+          - update-and-deploy
+          - update-data
+          - build-and-deploy
 
 jobs:
   update-data:
     name: Update Data JSON
     runs-on: ubuntu-latest
+    if: |
+      github.event_name != 'workflow_dispatch' ||
+      github.event.inputs.job == 'update-data' ||
+      github.event.inputs.job == 'update-and-deploy'
 
     outputs:
       changed: ${{ steps.git-diff.outputs.changed }}
@@ -62,9 +77,10 @@ jobs:
     name: Build and Deploy Docker
     runs-on: ubuntu-latest
     needs: update-data
-
-    # 只有当有文件变动或手动push才执行
-    if: needs.update-data.outputs.changed == 'true' || github.event_name == 'push'
+    if: |
+      (github.event_name != 'workflow_dispatch' && (needs.update-data.outputs.changed == 'true' || github.event_name == 'push')) ||
+      github.event.inputs.job == 'build-and-deploy' ||
+      github.event.inputs.job == 'update-and-deploy'
 
     steps:
       - name: Checkout repository
