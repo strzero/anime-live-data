@@ -47,18 +47,17 @@ export default function VenueTimelinePage() {
 
   const columns: GridColDef[] = [
     { field: '演出日期', headerName: '演出日期', flex: 3 },
-    { field: '演出名称', headerName: '演出名称', flex: 7 },
     {
-      field: '查看详细信息',
-      headerName: '操作',
-      flex: 2,
-      renderCell: params => (
-        <button
+      field: '演出名称',
+      headerName: '演出名称',
+      flex: 7,
+      renderCell: (params: any) => (
+        <span
+          style={{ cursor: 'pointer', color: '#1976d2' }}
           onClick={() => setDetailShow(params.row.show)}
-          style={{ color: '#1976d2', background: 'none', border: 'none', cursor: 'pointer' }}
         >
-          查看
-        </button>
+          {params.value}
+        </span>
       )
     }
   ];

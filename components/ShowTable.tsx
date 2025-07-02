@@ -43,7 +43,10 @@ export default function ShowTable({ shows, isMobile = false }: { shows: Show[], 
       renderCell: params => {
         const isNew = (params.row as Show).审批时间 === latestApprovalTime;
         return (
-          <>
+          <span
+            style={{ cursor: 'pointer', color: '#1976d2' }}
+            onClick={() => setOpenShow(params.row as Show)}
+          >
             {params.value}
             {isNew && (
               <span
@@ -61,7 +64,7 @@ export default function ShowTable({ shows, isMobile = false }: { shows: Show[], 
                 new
               </span>
             )}
-          </>
+          </span>
         );
       },
     },
@@ -72,31 +75,24 @@ export default function ShowTable({ shows, isMobile = false }: { shows: Show[], 
         headerName: '演出场所',
         flex: 6,
         minWidth: 150,
-        renderCell: params => {
+        renderCell: (params: any) => {
           const official = getOfficialVenueName(params.value) || null;
           let display = official || stripVenueAddress(params.value);
+          const isOfficial = Boolean(official);
           return (
-            <Link href={`/venue/${encodeURIComponent(official || params.value)}`}>
+            <Link href={`/venue/${encodeURIComponent(official || params.value)}`}
+              style={{
+                color: isOfficial ? '#1976d2' : 'inherit',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
+            >
               {display}
             </Link>
           );
         },
       },
     ] : []),
-    {
-      field: '操作',
-      headerName: '操作',
-      flex: 1,
-      minWidth: 80,
-      renderCell: params => (
-        <button
-          onClick={() => setOpenShow(params.row as Show)}
-          style={{ color: '#1976d2', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          查看
-        </button>
-      ),
-    },
   ];
 
   return (

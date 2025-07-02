@@ -6,7 +6,8 @@ export interface VenueMapItem {
   aliases: string[];
 }
 
-export function getOfficialVenueName(name: string): string | null {
+export function getOfficialVenueName(name: string | undefined | null): string | null {
+  if (typeof name !== 'string') return null;
   for (const item of venueMap as VenueMapItem[]) {
     if (
       name === item.official ||
@@ -29,7 +30,8 @@ export function getAllOfficialVenues(): VenueMapItem[] {
 }
 
 // 去除最后一个括号及其内容（包括中英文括号），仅保留前面部分
-export function stripVenueAddress(name: string): string {
+export function stripVenueAddress(name: string | undefined | null): string {
+  if (typeof name !== 'string') return '';
   // 匹配最后一个括号（中英文）及其内容
   return name.replace(/([（(][^（）()]*[）)])$/, '');
 }

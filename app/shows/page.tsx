@@ -51,7 +51,10 @@ export default function ShowsPage() {
       renderCell: (params: any) => {
         const isNew = params.row.审批时间 === latestApprovalTime;
         return (
-          <>
+          <span
+            style={{ cursor: 'pointer', color: '#1976d2' }}
+            onClick={() => setOpenShow(params.row)}
+          >
             {params.value}
             {isNew && (
               <span
@@ -69,7 +72,7 @@ export default function ShowsPage() {
                 new
               </span>
             )}
-          </>
+          </span>
         );
       }
     },
@@ -83,26 +86,22 @@ export default function ShowsPage() {
         renderCell: (params: any) => {
           const official = getOfficialVenueName(params.value);
           const display = official || stripVenueAddress(params.value);
+          const isOfficial = Boolean(official);
           return (
-            <a href={`/venue/${encodeURIComponent(official || params.value)}`}>{display}</a>
+            <a
+              href={`/venue/${encodeURIComponent(official || params.value)}`}
+              style={{
+                color: isOfficial ? '#1976d2' : 'inherit',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
+            >
+              {display}
+            </a>
           );
         }
       },
     ] : []),
-    {
-      field: '操作',
-      headerName: '操作',
-      flex: 1,
-      minWidth: 80,
-      renderCell: (params: any) => (
-        <button
-          onClick={() => setOpenShow(params.row)}
-          style={{ color: '#1976d2', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          查看
-        </button>
-      )
-    }
   ];
 
   return (
