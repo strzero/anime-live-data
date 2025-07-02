@@ -6,6 +6,7 @@ import Script from 'next/script';
 
 export const metadata = {
   title: 'Anime Live DB',
+  description: '日本及亚洲地区演出许可数据可视化，支持演出、场馆、时间线等多维度查询。',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
