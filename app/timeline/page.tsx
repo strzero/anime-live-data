@@ -1,4 +1,5 @@
 'use client';
+import { getOfficialVenueName, stripVenueAddress } from '@/components/venueUtils';
 import { useState, useMemo } from 'react';
 import { format, addDays } from 'date-fns';
 import { zhCN } from 'date-fns/locale/zh-CN';
@@ -7,6 +8,7 @@ import showsData from '@/data/data.json';
 
 export default function TimelinePage() {
   const [selectedNats, setSelectedNats] = useState<string[]>(['日本']); // 默认日本
+  const [hideChanged, setHideChanged] = useState(true);
   const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
 
   const today = new Date();
@@ -23,6 +25,7 @@ export default function TimelinePage() {
         ) || [];
         if (!actorNats.some(n => selectedNats.includes(n))) return;
       }
+      if (hideChanged && show.许可事项类型 !== '新办') return;
       days.forEach(d => {
         const ds = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
         if (show.演出日期.includes(ds)) {
@@ -31,7 +34,7 @@ export default function TimelinePage() {
       });
     });
     return map;
-  }, [days, selectedNats]);
+  }, [days, selectedNats, hideChanged]);
 
   return (
     <div>
@@ -52,6 +55,14 @@ export default function TimelinePage() {
             {nat}
           </label>
         ))}
+        <label style={{ marginLeft: 16 }}>
+          <input
+            type="checkbox"
+            checked={hideChanged}
+            onChange={e => setHideChanged(e.target.checked)}
+          />
+          隐藏变更
+        </label>
       </div>
       {days.map(d => {
         const key = format(d, 'yyyy-MM-dd');
@@ -61,7 +72,10 @@ export default function TimelinePage() {
             <h2>
               {format(d, 'yyyy-MM-dd')} （{format(d, 'EEEE', { locale: zhCN })}）
             </h2>
-            <ShowTable shows={list} />
+            <ShowTable shows={list.map(show => ({
+              ...show,
+              演出场所: getOfficialVenueName(show.演出场所) || stripVenueAddress(show.演出场所)
+            }))} />
           </div>
         ) : null;
       })}

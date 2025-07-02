@@ -7,6 +7,8 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import PlaceIcon from '@mui/icons-material/Place';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import showsData from '@/data/data.json';
+import ShowTable, { Show } from '@/components/ShowTable';
 
 const items = [
   { title: '演出列表', href: '/shows', icon: <ListAltIcon fontSize="large" /> },
@@ -15,14 +17,24 @@ const items = [
   { title: '演出者历史查询', href: '/performer', icon: <PersonSearchIcon fontSize="large" /> },
 ];
 
+function getLatestJapanShows() {
+  const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
+  return (showsData as Show[])
+    .filter(show => {
+      const actorNats = show.演员名单?.map(a =>
+        NATION_LIST.includes(a.国籍) ? a.国籍 : '其他'
+      ) || [];
+      return actorNats.includes('日本') && show.许可事项类型 === '新办';
+    })
+    .sort((a, b) => b.审批时间.localeCompare(a.审批时间))
+    .slice(0, 10);
+}
+
 export default function HomePage() {
   return (
     <Box sx={{ textAlign: 'center', mt: 6, px: 2 }}>
       <Typography variant="h3" gutterBottom>
         演出信息查询站
-      </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        欢迎使用，选择下方功能快速开始
       </Typography>
       {/* CSS Grid 布局 */}
       <Box
@@ -52,6 +64,12 @@ export default function HomePage() {
             </CardActionArea>
           </Card>
         ))}
+      </Box>
+      <Box sx={{ mt: 6, mb: 4 }}>
+        <Typography variant="h5" gutterBottom>最新日本新办演出</Typography>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          <ShowTable shows={getLatestJapanShows()} />
+        </div>
       </Box>
     </Box>
   );
