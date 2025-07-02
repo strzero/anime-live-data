@@ -3,6 +3,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useState } from 'react';
 import Link from 'next/link';
 import ShowDetailDialog from './ShowDetailDialog';
+import { getOfficialVenueName, stripVenueAddress } from './venueUtils';
 
 export interface Actor {
   姓名: string; 性别: string; 国籍: string; 证件号: string;
@@ -70,11 +71,15 @@ export default function ShowTable({ shows }: { shows: Show[] }) {
       headerName: '演出场所',
       flex: 6,
       minWidth: 150,
-      renderCell: params => (
-        <Link href={`/venue/${encodeURIComponent(params.value as string)}`}>
-          {params.value as string}
-        </Link>
-      ),
+      renderCell: params => {
+        const official = getOfficialVenueName(params.value) || null;
+        let display = official || stripVenueAddress(params.value);
+        return (
+          <Link href={`/venue/${encodeURIComponent(official || params.value)}`}>
+            {display}
+          </Link>
+        );
+      },
     },
     {
       field: '操作',
