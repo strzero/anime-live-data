@@ -34,16 +34,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            flexWrap: 'wrap' // 如果想在小屏下换行导航
+            flexWrap: 'wrap'
           }}
         >
-          <nav style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            <Link href="/" style={{ color: '#fff' }}>首页</Link>
-            <Link href="/shows" style={{ color: '#fff' }}>演出列表</Link>
-            <Link href="/timeline" style={{ color: '#fff' }}>时间线</Link>
-            <Link href="/venue" style={{ color: '#fff' }}>场馆排期</Link>
-            {/* <Link href="/performer" style={{ color: '#fff' }}>演出者出演信息</Link> */}
-          </nav>
+          <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+            <div style={{ fontWeight: 'bold', fontSize: 20, marginRight: 32 }}>
+              Anime Live DB
+            </div>
+            <nav style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+              <Link href="/" style={{ color: '#fff' }}>首页</Link>
+              <Link href="/shows" style={{ color: '#fff' }}>演出列表</Link>
+              <Link href="/timeline" style={{ color: '#fff' }}>时间线</Link>
+              <Link href="/venue" style={{ color: '#fff' }}>场馆排期</Link>
+              {/* <Link href="/performer" style={{ color: '#fff' }}>演出者出演信息</Link> */}
+            </nav>
+          </div>
           {lastInfo && (
             <div className="last-update" style={{ fontSize: 12 }}>
               上次更新时间：{lastInfo.检查时间} | 新增数量：{lastInfo.新增数量}
