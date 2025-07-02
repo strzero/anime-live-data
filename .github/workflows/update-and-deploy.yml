@@ -3,7 +3,7 @@ name: Update and Deploy
 on:
   schedule:
     # 每6小时执行一次
-    - cron: "0 */6 * * *"
+    - cron: "0 */2 * * *"
   push:
     # 只要代码有变动也触发
     branches:
