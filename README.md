@@ -1,4 +1,4 @@
-# 演出信息查询站
+# Anime Live DB
 
 提供上海演出最新信息，方便快速查询演出、场馆和演员相关数据。  
 网站地址：[live.s0tools.cn](https://live.s0tools.cn)

@@ -14,7 +14,7 @@ const items = [
   { title: '演出列表', href: '/shows', icon: <ListAltIcon fontSize="large" /> },
   { title: '时间线', href: '/timeline', icon: <TimelineIcon fontSize="large" /> },
   { title: '演出场所时间表', href: '/venue', icon: <PlaceIcon fontSize="large" /> },
-  { title: '演出者历史查询', href: '/performer', icon: <PersonSearchIcon fontSize="large" /> },
+  // { title: '演出者历史查询', href: '/performer', icon: <PersonSearchIcon fontSize="large" /> },
 ];
 
 function getLatestJapanShows() {
@@ -34,7 +34,7 @@ export default function HomePage() {
   return (
     <Box sx={{ textAlign: 'center', mt: 6, px: 2 }}>
       <Typography variant="h3" gutterBottom>
-        演出信息查询站
+        Anime Live DB
       </Typography>
       {/* CSS Grid 布局 */}
       <Box
@@ -66,7 +66,7 @@ export default function HomePage() {
         ))}
       </Box>
       <Box sx={{ mt: 6, mb: 4 }}>
-        <Typography variant="h5" gutterBottom>最新日本新办演出</Typography>
+        <Typography variant="h5" gutterBottom>最新信息</Typography>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <ShowTable shows={getLatestJapanShows()} />
         </div>

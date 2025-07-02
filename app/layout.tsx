@@ -5,7 +5,7 @@ import infoHistory from '@/data/info.json';
 import Script from 'next/script';
 
 export const metadata = {
-  title: '演出信息查询站',
+  title: 'Anime Live DB',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -52,7 +52,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main style={{ padding: 24 }}>{children}</main>
         <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee' }}>
-          由 Star0 开发
+          Developed by Star0
+          <br />
+          欢迎Star！<a href="https://github.com/strzero/anime-live-data" target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2' }}>
+            Github
+          </a>
         </footer>
       </body>
     </html>
