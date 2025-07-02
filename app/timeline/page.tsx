@@ -13,7 +13,7 @@ export default function TimelinePage() {
   const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
 
   const today = new Date();
-  const days = useMemo(() => Array.from({ length: 30 }).map((_, i) => addDays(today, i)), []);
+  const days = useMemo(() => Array.from({ length: 60 }).map((_, i) => addDays(today, i)), []);
 
   const showsByDay = useMemo(() => {
     const map: Record<string, Show[]> = {};
