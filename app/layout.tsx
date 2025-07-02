@@ -26,6 +26,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
       </head>
       <body style={{ margin: 0, fontFamily: 'sans-serif' }}>
+        <style>
+          {`
+            @media (max-width: 600px) {
+              .header-row {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+              }
+              .site-title {
+                margin-bottom: 12px !important;
+                margin-right: 0 !important;
+              }
+            }
+          `}
+        </style>
         <header
           style={{
             padding: 16,
@@ -37,8 +51,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             flexWrap: 'wrap'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-            <div style={{ fontWeight: 'bold', fontSize: 20, marginRight: 32 }}>
+          <div className="header-row" style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+            <div className="site-title" style={{ fontWeight: 'bold', fontSize: 20, marginRight: 32 }}>
               Anime Live DB
             </div>
             <nav style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
