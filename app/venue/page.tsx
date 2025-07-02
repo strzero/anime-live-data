@@ -3,10 +3,11 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import showsData from '@/data/data.json';
 import { Show } from '@/components/ShowTable';
 import { getAllOfficialVenues, getVenueMatchKeywords } from '@/components/venueUtils';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 
 export default function VenueListPage() {
+  const [search, setSearch] = useState('');
   const today = new Date();
   const allVenues = getAllOfficialVenues();
   const map = useMemo<Record<string, number>>(() => {
@@ -38,6 +39,12 @@ export default function VenueListPage() {
     .filter(([name]) => !allVenues.some(v => getVenueMatchKeywords(v.official).some(k => name.includes(k))))
     .map(([name, count], idx) => ({ id: idx, 演出场所: name, 次数: count }));
 
+  // 搜索过滤
+  const filterRows = (rows: { 演出场所: string; 次数: number; id: number }[]) =>
+    search.trim()
+      ? rows.filter(r => r.演出场所.toLowerCase().includes(search.trim().toLowerCase()))
+      : rows;
+
   const columns: GridColDef[] = [
     {
       field: '演出场所',
@@ -55,13 +62,24 @@ export default function VenueListPage() {
   return (
     <div>
       <h1>演出场所时间表</h1>
+      <div className="filter-bar" style={{ display: 'flex', gap: 16, margin: '16px 0', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="filter-row search-row" style={{ flex: 1, minWidth: 200 }}>
+          <input
+            type="text"
+            placeholder="搜索场馆名称..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc', fontSize: 16 }}
+          />
+        </div>
+      </div>
       <h2>预定义</h2>
-      <div style={{ height: predefinedRows.length > 20 ? 400 : 'auto', width: '100%', marginBottom: 32 }}>
+      <div style={{ height: filterRows(predefinedRows).length > 20 ? 400 : 'auto', width: '100%', marginBottom: 32 }}>
         <DataGrid
-          rows={predefinedRows}
+          rows={filterRows(predefinedRows)}
           columns={columns}
           disableRowSelectionOnClick
-          {...(predefinedRows.length > 20
+          {...(filterRows(predefinedRows).length > 20
             ? {
                 initialState: { pagination: { paginationModel: { pageSize: 20, page: 0 } } },
                 pageSizeOptions: [20, 50, 100],
@@ -70,12 +88,12 @@ export default function VenueListPage() {
         />
       </div>
       <h2>其他</h2>
-      <div style={{ height: otherRows.length > 20 ? 400 : 'auto', width: '100%' }}>
+      <div style={{ height: filterRows(otherRows).length > 20 ? 400 : 'auto', width: '100%' }}>
         <DataGrid
-          rows={otherRows}
+          rows={filterRows(otherRows)}
           columns={columns}
           disableRowSelectionOnClick
-          {...(otherRows.length > 20
+          {...(filterRows(otherRows).length > 20
             ? {
                 initialState: { pagination: { paginationModel: { pageSize: 20, page: 0 } } },
                 pageSizeOptions: [20, 50, 100],

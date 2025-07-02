@@ -47,29 +47,35 @@ export default function TimelinePage() {
   return (
     <div>
       <h1>时间线</h1>
-      <div style={{ marginBottom: 16 }}>
-        {['中国','日本','俄罗斯','英国','美国','中国台湾','其他'].map(nat => (
-          <label key={nat} style={{ marginRight: 8 }}>
+      <div className="filter-bar" style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="filter-row nation-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, minWidth: 200 }}>
+          {['中国','日本','俄罗斯','英国','美国','中国台湾','其他'].map(nat => (
+            <label key={nat} style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <input
+                type="checkbox"
+                checked={selectedNats.includes(nat)}
+                onChange={() =>
+                  setSelectedNats(prev =>
+                    prev.includes(nat) ? prev.filter(x => x !== nat) : [...prev, nat]
+                  )
+                }
+                style={{ accentColor: '#1976d2' }}
+              />
+              {nat}
+            </label>
+          ))}
+        </div>
+        <div className="filter-row" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <input
               type="checkbox"
-              checked={selectedNats.includes(nat)}
-              onChange={() =>
-                setSelectedNats(prev =>
-                  prev.includes(nat) ? prev.filter(x => x !== nat) : [...prev, nat]
-                )
-              }
+              checked={hideChanged}
+              onChange={e => setHideChanged(e.target.checked)}
+              style={{ accentColor: '#1976d2' }}
             />
-            {nat}
+            隐藏变更
           </label>
-        ))}
-        <label style={{ marginLeft: 16 }}>
-          <input
-            type="checkbox"
-            checked={hideChanged}
-            onChange={e => setHideChanged(e.target.checked)}
-          />
-          隐藏变更
-        </label>
+        </div>
       </div>
       {days.map(d => {
         const key = format(d, 'yyyy-MM-dd');

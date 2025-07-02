@@ -68,21 +68,26 @@ export default function VenueTimelinePage() {
   return (
     <div>
       <h1>{officialVenue} 时间表</h1>
-      <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-        <input
-          placeholder="搜索演出名称..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          style={{ flex: 1, padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-        />
-        <label>
+      <div className="filter-bar" style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="filter-row search-row" style={{ flex: 1, minWidth: 200 }}>
           <input
-            type="checkbox"
-            checked={hideChanged}
-            onChange={e => setHideChanged(e.target.checked)}
+            placeholder="搜索演出名称..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc', fontSize: 16 }}
           />
-          隐藏变更
-        </label>
+        </div>
+        <div className="filter-row" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <input
+              type="checkbox"
+              checked={hideChanged}
+              onChange={e => setHideChanged(e.target.checked)}
+              style={{ accentColor: '#1976d2' }}
+            />
+            隐藏变更
+          </label>
+        </div>
       </div>
       <h2>未来演出</h2>
       <div style={{ height: futureRows.length > 20 ? 600 : 'auto', width: '100%', marginBottom: 32 }}>
