@@ -2,6 +2,7 @@
 import './globals.css';
 import Link from 'next/link';
 import infoHistory from '@/data/info.json';
+import Script from 'next/script';
 
 export const metadata = {
   title: '演出信息查询站',
@@ -12,6 +13,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="zh-CN">
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-G00KW6FXCT" strategy="afterInteractive" />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-G00KW6FXCT');
+          `}
+        </Script>
+      </head>
       <body style={{ margin: 0, fontFamily: 'sans-serif' }}>
         <header
           style={{
