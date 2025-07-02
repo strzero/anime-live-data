@@ -98,41 +98,47 @@ export default function ShowsPage() {
   return (
     <div>
       <h1>演出列表</h1>
-      <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-        <input
-          placeholder="搜索演出名称..."
-          value={searchText}
-          onChange={e => setSearchText(e.target.value)}
-          style={{ flex: 1, padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-        />
-        {['中国','日本','俄罗斯','英国','美国','中国台湾','其他'].map(nat => (
-          <label key={nat} style={{ whiteSpace: 'nowrap' }}>
+      <div className="filter-bar" style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div className="filter-row search-row" style={{ flex: 1, minWidth: 200 }}>
+          <input
+            placeholder="搜索演出名称..."
+            value={searchText}
+            onChange={e => setSearchText(e.target.value)}
+            style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+          />
+        </div>
+        <div className="filter-row nation-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, minWidth: 200 }}>
+          {['中国','日本','俄罗斯','英国','美国','中国台湾','其他'].map(nat => (
+            <label key={nat} style={{ whiteSpace: 'nowrap' }}>
+              <input
+                type="checkbox"
+                checked={selectedNats.includes(nat)}
+                onChange={() => {
+                  setSelectedNats(prev =>
+                    prev.includes(nat) ? prev.filter(x => x !== nat) : [...prev, nat]
+                  );
+                }}
+              />
+              {nat}
+            </label>
+          ))}
+        </div>
+        <div className="filter-row date-row" style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 200 }}>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={e => setSelectedDate(e.target.value)}
+            style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+          />
+          <label>
             <input
               type="checkbox"
-              checked={selectedNats.includes(nat)}
-              onChange={() => {
-                setSelectedNats(prev =>
-                  prev.includes(nat) ? prev.filter(x => x !== nat) : [...prev, nat]
-                );
-              }}
+              checked={hideChanged}
+              onChange={e => setHideChanged(e.target.checked)}
             />
-            {nat}
+            隐藏变更
           </label>
-        ))}
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={e => setSelectedDate(e.target.value)}
-          style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-        />
-        <label>
-          <input
-            type="checkbox"
-            checked={hideChanged}
-            onChange={e => setHideChanged(e.target.checked)}
-          />
-          隐藏变更
-        </label>
+        </div>
       </div>
       <div style={{ height: filteredShows.length > 20 ? 600 : 'auto', width: '100%' }}>
         <DataGrid

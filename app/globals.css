@@ -47,3 +47,30 @@ a {
     display: none;
   }
 }
+
+.filter-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-row {
+  min-width: 200px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+  .filter-bar {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .filter-row {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .nation-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
