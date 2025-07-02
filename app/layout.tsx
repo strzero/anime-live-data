@@ -28,8 +28,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/" style={{ color: '#fff' }}>首页</Link>
             <Link href="/shows" style={{ color: '#fff' }}>演出列表</Link>
             <Link href="/timeline" style={{ color: '#fff' }}>时间线</Link>
-            <Link href="/venue" style={{ color: '#fff' }}>演出场所时间表</Link>
-            <Link href="/performer" style={{ color: '#fff' }}>演出者出演信息</Link>
+            <Link href="/venue" style={{ color: '#fff' }}>场馆排期</Link>
+            {/* <Link href="/performer" style={{ color: '#fff' }}>演出者出演信息</Link> */}
           </nav>
           {lastInfo && (
             <div className="last-update" style={{ fontSize: 12 }}>
