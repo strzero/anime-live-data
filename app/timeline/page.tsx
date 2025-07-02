@@ -48,7 +48,6 @@ export default function TimelinePage() {
     <div>
       <h1>时间线</h1>
       <div style={{ marginBottom: 16 }}>
-        <strong>国籍筛选：</strong>
         {['中国','日本','俄罗斯','英国','美国','中国台湾','其他'].map(nat => (
           <label key={nat} style={{ marginRight: 8 }}>
             <input
