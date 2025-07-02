@@ -20,7 +20,7 @@ export default function VenueListPage() {
     return m;
   }, []);
 
-  // 预定义部分
+  // 热门场馆部分
   const predefinedRows = allVenues.map((item, idx) => {
     // 统计所有匹配词相关的场馆演出数
     const count = Object.entries(map)
@@ -61,7 +61,7 @@ export default function VenueListPage() {
 
   return (
     <div>
-      <h1>演出场所时间表</h1>
+      <h1>场馆排期表</h1>
       <div className="filter-bar" style={{ display: 'flex', gap: 16, margin: '16px 0', flexWrap: 'wrap', alignItems: 'center' }}>
         <div className="filter-row search-row" style={{ flex: 1, minWidth: 200 }}>
           <input
@@ -73,7 +73,7 @@ export default function VenueListPage() {
           />
         </div>
       </div>
-      <h2>预定义</h2>
+      <h2>热门场馆</h2>
       <div style={{ height: filterRows(predefinedRows).length > 20 ? 400 : 'auto', width: '100%', marginBottom: 32 }}>
         <DataGrid
           rows={filterRows(predefinedRows)}
@@ -87,7 +87,7 @@ export default function VenueListPage() {
             : { autoHeight: true, hideFooter: true })}
         />
       </div>
-      <h2>其他</h2>
+      <h2>其他场馆</h2>
       <div style={{ height: filterRows(otherRows).length > 20 ? 400 : 'auto', width: '100%' }}>
         <DataGrid
           rows={filterRows(otherRows)}

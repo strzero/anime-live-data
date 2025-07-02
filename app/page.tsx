@@ -13,7 +13,7 @@ import ShowTable, { Show } from '@/components/ShowTable';
 const items = [
   { title: '演出列表', href: '/shows', icon: <ListAltIcon fontSize="large" /> },
   { title: '时间线', href: '/timeline', icon: <TimelineIcon fontSize="large" /> },
-  { title: '演出场所时间表', href: '/venue', icon: <PlaceIcon fontSize="large" /> },
+  { title: '场馆排期表', href: '/venue', icon: <PlaceIcon fontSize="large" /> },
   // { title: '演出者历史查询', href: '/performer', icon: <PersonSearchIcon fontSize="large" /> },
 ];
 
