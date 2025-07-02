@@ -1,6 +1,6 @@
 'use client';
 import { getOfficialVenueName, stripVenueAddress } from '@/components/venueUtils';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { format, addDays } from 'date-fns';
 import { zhCN } from 'date-fns/locale/zh-CN';
 import ShowTable, { Show } from '@/components/ShowTable';
@@ -9,6 +9,7 @@ import showsData from '@/data/data.json';
 export default function TimelinePage() {
   const [selectedNats, setSelectedNats] = useState<string[]>(['日本']); // 默认日本
   const [hideChanged, setHideChanged] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
 
   const today = new Date();
@@ -35,6 +36,13 @@ export default function TimelinePage() {
     });
     return map;
   }, [days, selectedNats, hideChanged]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 600);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div>
@@ -75,7 +83,7 @@ export default function TimelinePage() {
             <ShowTable shows={list.map(show => ({
               ...show,
               演出场所: getOfficialVenueName(show.演出场所) || stripVenueAddress(show.演出场所)
-            }))} />
+            }))} isMobile={isMobile} />
           </div>
         ) : null;
       })}

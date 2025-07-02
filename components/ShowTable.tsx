@@ -25,7 +25,7 @@ export interface Show {
   详情页URL: string;
 }
 
-export default function ShowTable({ shows }: { shows: Show[] }) {
+export default function ShowTable({ shows, isMobile = false }: { shows: Show[], isMobile?: boolean }) {
   const [openShow, setOpenShow] = useState<Show | null>(null);
   const rowCount = shows.length;
 
@@ -65,22 +65,24 @@ export default function ShowTable({ shows }: { shows: Show[] }) {
         );
       },
     },
-    { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
-    {
-      field: '演出场所',
-      headerName: '演出场所',
-      flex: 6,
-      minWidth: 150,
-      renderCell: params => {
-        const official = getOfficialVenueName(params.value) || null;
-        let display = official || stripVenueAddress(params.value);
-        return (
-          <Link href={`/venue/${encodeURIComponent(official || params.value)}`}>
-            {display}
-          </Link>
-        );
+    ...(!isMobile ? [
+      { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
+      {
+        field: '演出场所',
+        headerName: '演出场所',
+        flex: 6,
+        minWidth: 150,
+        renderCell: params => {
+          const official = getOfficialVenueName(params.value) || null;
+          let display = official || stripVenueAddress(params.value);
+          return (
+            <Link href={`/venue/${encodeURIComponent(official || params.value)}`}>
+              {display}
+            </Link>
+          );
+        },
       },
-    },
+    ] : []),
     {
       field: '操作',
       headerName: '操作',

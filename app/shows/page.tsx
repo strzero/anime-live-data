@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ShowTable, { Show } from '@/components/ShowTable';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ShowDetailDialog from '@/components/ShowDetailDialog';
@@ -12,7 +12,15 @@ export default function ShowsPage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [hideChanged, setHideChanged] = useState(true);
   const [openShow, setOpenShow] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 600);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const filteredShows = useMemo<Show[]>(() => {
     return (showsData as Show[]).filter(show => {
@@ -65,20 +73,22 @@ export default function ShowsPage() {
         );
       }
     },
-    { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
-    {
-      field: '演出场所',
-      headerName: '演出场所',
-      flex: 6,
-      minWidth: 150,
-      renderCell: (params: any) => {
-        const official = getOfficialVenueName(params.value);
-        const display = official || stripVenueAddress(params.value);
-        return (
-          <a href={`/venue/${encodeURIComponent(official || params.value)}`}>{display}</a>
-        );
-      }
-    },
+    ...(!isMobile ? [
+      { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
+      {
+        field: '演出场所',
+        headerName: '演出场所',
+        flex: 6,
+        minWidth: 150,
+        renderCell: (params: any) => {
+          const official = getOfficialVenueName(params.value);
+          const display = official || stripVenueAddress(params.value);
+          return (
+            <a href={`/venue/${encodeURIComponent(official || params.value)}`}>{display}</a>
+          );
+        }
+      },
+    ] : []),
     {
       field: '操作',
       headerName: '操作',
