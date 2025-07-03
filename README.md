@@ -14,6 +14,7 @@
 
 - 数据自动更新，镜像自动推送至Docker Hub：  
   `stellatezero/anime-live-data`
+- 如需使用数据，可访问 [data.json](https://github.com/strzero/anime-live-db/blob/main/data/data.json)，数据每两小时自动更新。
 
 ### Docker Compose 示例配置
 
@@ -27,3 +28,4 @@ services:
       - '5190:3000'
     environment:
       - NODE_ENV=production
+
