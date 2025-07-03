@@ -97,10 +97,10 @@ jobs:
           context: .
           push: true
           tags: |
-            stellatezero/anime-live-data:latest
-            stellatezero/anime-live-data:${{ steps.date.outputs.date }}
-          cache-from: type=registry,ref=stellatezero/anime-live-data:cache
-          cache-to: type=registry,ref=stellatezero/anime-live-data:cache,mode=max
+            stellatezero/anime-live-db:latest
+            stellatezero/anime-live-db:${{ steps.date.outputs.date }}
+          cache-from: type=registry,ref=stellatezero/anime-live-db:cache
+          cache-to: type=registry,ref=stellatezero/anime-live-db:cache,mode=max
 
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y sshpass
@@ -113,7 +113,7 @@ jobs:
       #     password: ${{ secrets.SERVER_SSH_PASSWORD }}
       #     port: 22
       #     script: |
-      #       cd /opt/anime-live-data
+      #       cd /opt/anime-live-db
       #       docker compose pull
       #       docker compose up -d
       #       docker image prune -f
