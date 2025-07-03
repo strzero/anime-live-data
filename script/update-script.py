@@ -120,7 +120,7 @@ def parse_detail(url):
         if i == 4:
             cells["演出场所"] = tds[1].text.strip()
         if i == 5:
-            cells["演员人数"] = tds[1].text.strip()
+            cells["出演者人数"] = tds[1].text.strip()
             cells["场次"] = tds[3].text.strip()
         if i == 6:
             cells["是否外国人短期工作"] = tds[1].text.strip()
@@ -132,12 +132,12 @@ def parse_detail(url):
 
     actor_table = tables[1]
     actor_rows = actor_table.find_all("tr")[1:]
-    演员名单 = []
+    出演者名单 = []
     for r in actor_rows:
         tds = r.find_all("td")
         if len(tds) < 5:
             continue
-        演员名单.append({
+        出演者名单.append({
             "序号": tds[0].text.strip(),
             "姓名": tds[1].text.strip(),
             "性别": tds[2].text.strip(),
@@ -157,12 +157,12 @@ def parse_detail(url):
         "演出日期": cells.get("演出日期", ""),
         "演出日期数据": cells.get("演出日期数据", []),
         "演出场所": cells.get("演出场所", ""),
-        "演员人数": cells.get("演员人数", ""),
+        "出演者人数": cells.get("出演者人数", ""),
         "场次": cells.get("场次", ""),
         "是否外国人短期工作": cells.get("是否外国人短期工作", ""),
         "演出内容": cells.get("演出内容", ""),
         "审批时间": 审批时间,
-        "演员名单": 演员名单,
+        "出演者名单": 出演者名单,
         "详情页URL": url
     }
 
