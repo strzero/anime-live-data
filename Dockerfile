@@ -1,41 +1,23 @@
-# Install dependencies and build
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Enable pnpm
+# 启用 corepack 和 pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Set environment variables
-ENV NODE_OPTIONS=--max-old-space-size=2048
-
-# Install dependencies
+# 先只复制锁文件和package.json，安装依赖，利用缓存
 COPY package.json pnpm-lock.yaml ./
+
 RUN pnpm install --frozen-lockfile
 
-# Copy all source code
+# 再复制其他文件，执行构建
 COPY . .
 
-# Build Next.js in standalone mode
 RUN pnpm build
 
-# Production image
-FROM node:18-alpine AS runner
+# 生产环境只保留生产依赖
+RUN pnpm prune --prod
 
-WORKDIR /app
-
-# Copy standalone output
-COPY --from=builder /app/.next/standalone ./
-
-# Copy static assets
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-
-# Copy package.json for runtime
-COPY --from=builder /app/package.json ./package.json
-
-ENV NODE_ENV=production
 EXPOSE 3000
 
-# Start the app
-CMD ["node", "server.js"]
+CMD ["pnpm", "start"]
