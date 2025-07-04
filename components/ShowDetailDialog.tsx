@@ -26,7 +26,7 @@ interface Show {
   场次: string;
   演出内容: string;
   审批时间: string;
-  演员名单?: Actor[];
+  出演者名单?: Actor[];
   详情页URL: string;
 }
 
@@ -62,8 +62,8 @@ export default function ShowDetailDialog({
         </Card>
         <Card elevation={2}>
           <CardContent>
-            <Typography variant="h6">演员名单</Typography>
-              {show.演员名单?.map((actor, idx) => (
+            <Typography variant="h6">出演者名单</Typography>
+              {show.出演者名单?.map((actor, idx) => (
                 <Card key={`${actor.证件号}-${idx}`} style={{ marginBottom: 8 }}>
                 <CardContent>
                   <Typography>姓名：{actor.姓名}</Typography>

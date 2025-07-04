@@ -21,7 +21,7 @@ function getLatestJapanShows() {
   const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
   return (showsData as Show[])
     .filter(show => {
-      const actorNats = show.演员名单?.map(a =>
+      const actorNats = show.出演者名单?.map(a =>
         NATION_LIST.includes(a.国籍) ? a.国籍 : '其他'
       ) || [];
       return actorNats.includes('日本') && show.许可事项类型 === '新办';

@@ -16,7 +16,7 @@ export default function PerformerContent() {
   const matched = useMemo(() => {
     if (!name || !gender || !nat || !id) return [];
     return (showsData as Show[]).filter(show =>
-      show.演员名单?.some((a: Actor) =>
+      show.出演者名单?.some((a: Actor) =>
         a.姓名 === name &&
         a.性别 === gender &&
         a.国籍 === nat &&

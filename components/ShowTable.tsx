@@ -21,7 +21,7 @@ export interface Show {
   场次: string;
   演出内容: string;
   审批时间: string;
-  演员名单?: Actor[];
+  出演者名单?: Actor[];
   详情页URL: string;
 }
 

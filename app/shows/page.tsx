@@ -26,7 +26,7 @@ export default function ShowsPage() {
     return (showsData as Show[]).filter(show => {
       if (searchText && !show.演出名称.includes(searchText)) return false;
       if (selectedNats.length > 0) {
-        const actorNats = show.演员名单?.map(a =>
+        const actorNats = show.出演者名单?.map(a =>
           NATION_LIST.includes(a.国籍) ? a.国籍 : '其他'
         ) || [];
         if (!actorNats.some(n => selectedNats.includes(n))) return false;
