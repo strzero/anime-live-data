@@ -40,14 +40,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 margin-bottom: 12px !important;
                 margin-right: 0 !important;
               }
-              .checking-bar {
-                display: none !important;
-              }
               .checking-bar-mobile {
                 display: flex !important;
               }
             }
-            @media (min-width: 601px) {
+            @media (max-width: 950px) {
+              .checking-bar {
+                display: none !important;
+              }
+
+            }
+            @media (min-width: 950px) {
               .checking-bar-mobile {
                 display: none !important;
               }
@@ -81,14 +84,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main style={{ padding: 24 }}>{children}</main>
         <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee', position: 'relative', color: '#222' }}>
-          <span className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', marginBottom: 8, color: '#222' }}>
+          <span className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', color: '#222' }}>
             <CheckingUpdate lastInfo={lastInfo} color="#222" />
           </span>
-          Developed by Star0
-          <br />
-          欢迎Star！<a href="https://github.com/strzero/anime-live-data" target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2' }}>
-            Github
-          </a>
+          <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
+            Developed by Star0
+            <br />
+            欢迎Star:
+            <a href="https://github.com/strzero/anime-live-data" target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2', marginLeft: 4 }}>
+              Github
+            </a>
+          </span>
+          <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
+            当前构建版本：{process.env.NEXT_PUBLIC_BUILD_TIME ? process.env.NEXT_PUBLIC_BUILD_TIME : 'Dev'}
+          </span>
         </footer>
       </body>
     </html>

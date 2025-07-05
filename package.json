@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run gen-build-info && next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "next-sitemap"
+    "postbuild": "next-sitemap",
+    "gen-build-info": "node script/gen-build-info.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
