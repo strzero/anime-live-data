@@ -10,7 +10,15 @@ import { isMiscOrHidden } from '@/components/miscFilterUtils';
 export default function TimelinePage() {
   const [selectedNats, setSelectedNats] = useState<string[]>(['日本']); // 默认日本
   const [hideChanged, setHideChanged] = useState(true);
-  const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
+  // 新的国籍分组
+  const NATION_LIST = ['中国', '日本', '俄罗斯', '英美', '其他'];
+  function mapNation(nat: string) {
+    if (nat === '中国') return '中国';
+    if (nat === '日本') return '日本';
+    if (nat === '俄罗斯') return '俄罗斯';
+    if (nat === '英国' || nat === '美国') return '英美';
+    return '其他';
+  }
 
   const today = new Date();
   const days = useMemo(() => Array.from({ length: 60 }).map((_, i) => addDays(today, i)), []);
@@ -21,9 +29,7 @@ export default function TimelinePage() {
     (showsData as Show[]).forEach(show => {
       // 国籍筛选
       if (selectedNats.length > 0) {
-        const actorNats = show.出演者名单?.map(a =>
-          NATION_LIST.includes(a.国籍) ? a.国籍 : '其他'
-        ) || [];
+        const actorNats = show.出演者名单?.map(a => mapNation(a.国籍)) || [];
         if (!actorNats.some(n => selectedNats.includes(n))) return;
       }
       if (hideChanged && show.许可事项类型 !== '新办') return;
@@ -52,16 +58,16 @@ export default function TimelinePage() {
       <h1>时间线</h1>
       <div className="filter-bar" style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
         <div className="filter-row nation-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, minWidth: 200 }}>
-          {['中国','日本','俄罗斯','英国','美国','中国台湾','其他'].map(nat => (
+          {NATION_LIST.map(nat => (
             <label key={nat} style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4 }}>
               <input
                 type="checkbox"
                 checked={selectedNats.includes(nat)}
-                onChange={() =>
+                onChange={() => {
                   setSelectedNats(prev =>
                     prev.includes(nat) ? prev.filter(x => x !== nat) : [...prev, nat]
-                  )
-                }
+                  );
+                }}
                 style={{ accentColor: '#1976d2' }}
               />
               {nat}

@@ -60,7 +60,8 @@ export default function VenueListPage() {
       headerName: '演出场所',
       flex: 8,
       renderCell: params => (
-        <Link href={`/venue/${encodeURIComponent(params.value as string)}`}>
+        <Link href={`/venue/${encodeURIComponent(params.value as string)}`}
+          style={{ color: '#1976d2', cursor: 'pointer', textDecoration: 'none' }}>
           {params.value as string}
         </Link>
       ),
