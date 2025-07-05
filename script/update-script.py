@@ -4,6 +4,10 @@ from bs4 import BeautifulSoup
 import os
 import re
 from datetime import datetime, timedelta
+try:
+    from zoneinfo import ZoneInfo  # Python 3.9+
+except ImportError:
+    from pytz import timezone as ZoneInfo  # 兼容老版本
 
 BASE_URL = "http://wsbs.wgj.sh.gov.cn"
 LIST_URL = BASE_URL + "/shwgj_ywtb/core/web/welcome/index!toResultNotice.action?flag=1"
@@ -233,7 +237,7 @@ with open(JSON_FILE, "w", encoding="utf-8") as f:
     json.dump(stored_data, f, ensure_ascii=False, indent=2)
 
 info = {
-    "检查时间": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "检查时间": datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M"),  # 不显示秒
     "是否更新": bool(new_items),
     "新增数量": len(new_items)
 }
