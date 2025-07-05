@@ -55,7 +55,7 @@ export default function CheckingUpdate({ lastInfo, color = '#fff' }: { lastInfo:
       <span style={{ margin: '0 6px', opacity: 0.7 }}>|</span>
       {lastInfo && (
         <>
-          上次更新时间：{lastInfo.检查时间}
+          上次更新：{lastInfo.检查时间}
           <span style={{ margin: '0 6px', opacity: 0.7 }}>|</span>
           新增数量：{lastInfo.新增数量}
         </>
