@@ -27,12 +27,21 @@ export default function TimelinePage() {
         if (!actorNats.some(n => selectedNats.includes(n))) return;
       }
       if (hideChanged && show.许可事项类型 !== '新办') return;
-      days.forEach(d => {
-        const ds = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
-        if (show.演出日期.includes(ds)) {
-          map[format(d, 'yyyy-MM-dd')].push(show);
-        }
-      });
+      // 优先使用演出日期数据字段
+      if (Array.isArray(show.演出日期数据) && show.演出日期数据.length > 0) {
+        show.演出日期数据.forEach((dateStr: string) => {
+          if (map[dateStr]) {
+            map[dateStr].push(show);
+          }
+        });
+      } else {
+        days.forEach(d => {
+          const ds = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+          if (show.演出日期.includes(ds)) {
+            map[format(d, 'yyyy-MM-dd')].push(show);
+          }
+        });
+      }
     });
     return map;
   }, [days, selectedNats, hideChanged]);
