@@ -1,7 +1,6 @@
 'use client';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import ShowTable, { Show } from '@/components/ShowTable';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ShowDetailDialog from '@/components/ShowDetailDialog';
 import showsData from '@/data/data.json';
 import { getOfficialVenueName, stripVenueAddress } from '@/components/venueUtils';
@@ -13,15 +12,7 @@ export default function ShowsPage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [hideChanged, setHideChanged] = useState(true);
   const [openShow, setOpenShow] = useState<any>(null);
-  const [isMobile, setIsMobile] = useState(false);
   const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 600);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const filteredShows = useMemo<Show[]>(() => {
     return (showsData as Show[]).filter(show => {
@@ -43,68 +34,6 @@ export default function ShowsPage() {
   const latestApprovalTime = filteredShows.reduce((latest, show) => {
     return show.审批时间 > latest ? show.审批时间 : latest;
   }, '');
-
-  const columns: GridColDef[] = [
-    {
-      field: '演出名称',
-      headerName: '演出名称',
-      flex: 6,
-      minWidth: 150,
-      renderCell: (params: any) => {
-        const isNew = params.row.审批时间 === latestApprovalTime;
-        return (
-          <span
-            style={{ cursor: 'pointer', color: '#1976d2' }}
-            onClick={() => setOpenShow(params.row)}
-          >
-            {params.value}
-            {isNew && (
-              <span
-                style={{
-                  marginLeft: 6,
-                  color: 'red',
-                  fontWeight: 'bold',
-                  fontSize: '0.85em',
-                  border: '1px solid red',
-                  borderRadius: 3,
-                  padding: '0 4px',
-                  userSelect: 'none',
-                }}
-              >
-                new
-              </span>
-            )}
-          </span>
-        );
-      }
-    },
-    ...(!isMobile ? [
-      { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
-      {
-        field: '演出场所',
-        headerName: '演出场所',
-        flex: 6,
-        minWidth: 150,
-        renderCell: (params: any) => {
-          const official = getOfficialVenueName(params.value);
-          const display = official || stripVenueAddress(params.value);
-          const isOfficial = Boolean(official);
-          return (
-            <a
-              href={`/venue/${encodeURIComponent(official || params.value)}`}
-              style={{
-                color: isOfficial ? '#1976d2' : 'inherit',
-                cursor: 'pointer',
-                textDecoration: 'none',
-              }}
-            >
-              {display}
-            </a>
-          );
-        }
-      },
-    ] : []),
-  ];
 
   return (
     <div>
@@ -153,19 +82,7 @@ export default function ShowsPage() {
           </label>
         </div>
       </div>
-      <div style={{ height: filteredShows.length > 20 ? 600 : 'auto', width: '100%' }}>
-        <DataGrid
-          rows={filteredShows.map((s, i) => ({ id: i, ...s }))}
-          columns={columns}
-          {...(filteredShows.length > 20
-            ? {
-                initialState: { pagination: { paginationModel: { pageSize: 20, page: 0 } } },
-                pageSizeOptions: [20, 50, 100],
-              }
-            : { autoHeight: true, hideFooter: true })}
-          disableRowSelectionOnClick
-        />
-      </div>
+      <ShowTable shows={filteredShows} hideChanged={hideChanged} />
       {openShow && <ShowDetailDialog show={openShow} onClose={() => setOpenShow(null)} />}
     </div>
   );

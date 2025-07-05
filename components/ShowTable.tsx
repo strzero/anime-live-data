@@ -47,7 +47,7 @@ export default function ShowTable({ shows, isMobile = false, hideChanged }: { sh
       field: '演出名称',
       headerName: '演出名称',
       flex: 6,
-      minWidth: 150,
+      minWidth: 300,
       renderCell: params => {
         const isNew = (params.row as Show).审批时间 === latestApprovalTime;
         return (
@@ -76,31 +76,29 @@ export default function ShowTable({ shows, isMobile = false, hideChanged }: { sh
         );
       },
     },
-    ...(!isMobile ? [
-      { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 120 },
-      {
-        field: '演出场所',
-        headerName: '演出场所',
-        flex: 6,
-        minWidth: 150,
-        renderCell: (params: any) => {
-          const official = getOfficialVenueName(params.value) || null;
-          let display = official || stripVenueAddress(params.value);
-          const isOfficial = Boolean(official);
-          return (
-            <Link href={`/venue/${encodeURIComponent(official || params.value)}`}
-              style={{
-                color: isOfficial ? '#1976d2' : 'inherit',
-                cursor: 'pointer',
-                textDecoration: 'none',
-              }}
-            >
-              {display}
-            </Link>
-          );
-        },
+    { field: '演出日期', headerName: '演出日期', flex: 4, minWidth: 300 },
+    {
+      field: '演出场所',
+      headerName: '演出场所',
+      flex: 6,
+      minWidth: 300,
+      renderCell: (params: any) => {
+        const official = getOfficialVenueName(params.value) || null;
+        let display = official || stripVenueAddress(params.value);
+        const isOfficial = Boolean(official);
+        return (
+          <Link href={`/venue/${encodeURIComponent(official || params.value)}`}
+            style={{
+              color: isOfficial ? '#1976d2' : 'inherit',
+              cursor: 'pointer',
+              textDecoration: 'none',
+            }}
+          >
+            {display}
+          </Link>
+        );
       },
-    ] : []),
+    },
   ];
 
   return (
