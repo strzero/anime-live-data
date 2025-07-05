@@ -1,9 +1,10 @@
 'use client';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import ShowDetailDialog from './ShowDetailDialog';
 import { getOfficialVenueName, stripVenueAddress } from './venueUtils';
+import { isMiscOrHidden } from '@/components/miscFilterUtils';
 
 export interface Actor {
   姓名: string; 性别: string; 国籍: string; 证件号: string;
@@ -25,7 +26,7 @@ export interface Show {
   详情页URL: string;
 }
 
-export default function ShowTable({ shows, isMobile = false }: { shows: Show[], isMobile?: boolean }) {
+export default function ShowTable({ shows, isMobile = false, hideChanged }: { shows: Show[], isMobile?: boolean, hideChanged?: boolean }) {
   const [openShow, setOpenShow] = useState<Show | null>(null);
   const rowCount = shows.length;
 
@@ -33,6 +34,13 @@ export default function ShowTable({ shows, isMobile = false }: { shows: Show[], 
   const latestApprovalTime = shows.reduce((latest, show) => {
     return show.审批时间 > latest ? show.审批时间 : latest;
   }, '');
+
+  const filteredShows = useMemo(() => {
+    return shows.filter(show => {
+      if (hideChanged && isMiscOrHidden(show)) return false;
+      return true;
+    });
+  }, [shows, hideChanged]);
 
   const columns: GridColDef[] = [
     {
@@ -99,7 +107,7 @@ export default function ShowTable({ shows, isMobile = false }: { shows: Show[], 
     <>
       <div style={{ height: rowCount > 20 ? 600 : 'auto', width: '100%' }}>
         <DataGrid
-          rows={shows.map((s, i) => ({ id: i, ...s }))}
+          rows={filteredShows.map((s, i) => ({ id: i, ...s }))}
           columns={columns}
           {...(rowCount > 20
             ? {

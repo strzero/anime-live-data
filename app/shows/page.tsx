@@ -5,6 +5,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ShowDetailDialog from '@/components/ShowDetailDialog';
 import showsData from '@/data/data.json';
 import { getOfficialVenueName, stripVenueAddress } from '@/components/venueUtils';
+import { isMiscOrHidden } from '@/components/miscFilterUtils';
 
 export default function ShowsPage() {
   const [searchText, setSearchText] = useState('');
@@ -33,6 +34,7 @@ export default function ShowsPage() {
       }
       if (selectedDate && !(show.演出日期数据?.includes(selectedDate) || show.演出日期?.includes(selectedDate))) return false;
       if (hideChanged && show.许可事项类型 !== '新办') return false;
+      if (hideChanged && isMiscOrHidden(show)) return false;
       return true;
     });
   }, [searchText, selectedNats, selectedDate, hideChanged]);
@@ -147,7 +149,7 @@ export default function ShowsPage() {
               onChange={e => setHideChanged(e.target.checked)}
               style={{ accentColor: '#1976d2' }}
             />
-            隐藏变更
+            隐藏变更与杂项
           </label>
         </div>
       </div>

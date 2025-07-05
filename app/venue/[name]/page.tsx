@@ -6,6 +6,7 @@ import showsData from '@/data/data.json';
 import { Show } from '@/components/ShowTable';
 import ShowDetailDialog from '@/components/ShowDetailDialog';
 import { getOfficialVenueName, getVenueMatchKeywords, stripVenueAddress } from '@/components/venueUtils';
+import { isMiscOrHidden } from '@/components/miscFilterUtils';
 
 export default function VenueTimelinePage() {
   const { name } = useParams() as { name: string };
@@ -24,7 +25,8 @@ export default function VenueTimelinePage() {
       .filter(s => keywords.some(k => s.演出场所?.includes(k)))
       .filter(s =>
         (!search || s.演出名称.includes(search) || s.举办单位?.includes(search)) &&
-        (!hideChanged || s.许可事项类型 === '新办')
+        (!hideChanged || s.许可事项类型 === '新办') &&
+        (!hideChanged || !isMiscOrHidden(s))
       )
       .flatMap((s, idx) =>
         (s.演出日期数据 || [s.演出日期]).map(d => {
@@ -39,10 +41,9 @@ export default function VenueTimelinePage() {
           };
         })
       );
-    return {
-      futureRows: all.filter(r => r.dateObj >= now).sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()),
-      pastRows: all.filter(r => r.dateObj < now).sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime())
-    };
+    const futureRows = all.filter(r => r.dateObj >= now);
+    const pastRows = all.filter(r => r.dateObj < now);
+    return { futureRows, pastRows };
   }, [keywords, search, hideChanged]);
 
   const columns: GridColDef[] = [
@@ -85,7 +86,7 @@ export default function VenueTimelinePage() {
               onChange={e => setHideChanged(e.target.checked)}
               style={{ accentColor: '#1976d2' }}
             />
-            隐藏变更
+            隐藏变更与杂项
           </label>
         </div>
       </div>

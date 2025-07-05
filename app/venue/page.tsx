@@ -3,11 +3,13 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import showsData from '@/data/data.json';
 import { Show } from '@/components/ShowTable';
 import { getAllOfficialVenues, getVenueMatchKeywords } from '@/components/venueUtils';
+import { isMiscOrHidden } from '@/components/miscFilterUtils';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 
 export default function VenueListPage() {
   const [search, setSearch] = useState('');
+  const [hideChanged, setHideChanged] = useState(false);
   const today = new Date();
   const allVenues = getAllOfficialVenues();
   const map = useMemo<Record<string, number>>(() => {
@@ -40,10 +42,17 @@ export default function VenueListPage() {
     .map(([name, count], idx) => ({ id: idx, 演出场所: name, 次数: count }));
 
   // 搜索过滤
-  const filterRows = (rows: { 演出场所: string; 次数: number; id: number }[]) =>
-    search.trim()
+  const filterRows = (rows: { 演出场所: string; 次数: number; id: number }[]) => {
+    return (search.trim()
       ? rows.filter(r => r.演出场所.toLowerCase().includes(search.trim().toLowerCase()))
-      : rows;
+      : rows
+    ).filter(r => {
+      if (!hideChanged) return true;
+      // 查找该场馆的任一演出
+      const show = (showsData as Show[]).find(s => s.演出场所 === r.演出场所);
+      return show ? !isMiscOrHidden(show) : true;
+    });
+  };
 
   const columns: GridColDef[] = [
     {

@@ -5,6 +5,7 @@ import { format, addDays } from 'date-fns';
 import { zhCN } from 'date-fns/locale/zh-CN';
 import ShowTable, { Show } from '@/components/ShowTable';
 import showsData from '@/data/data.json';
+import { isMiscOrHidden } from '@/components/miscFilterUtils';
 
 export default function TimelinePage() {
   const [selectedNats, setSelectedNats] = useState<string[]>(['日本']); // 默认日本
@@ -27,6 +28,7 @@ export default function TimelinePage() {
         if (!actorNats.some(n => selectedNats.includes(n))) return;
       }
       if (hideChanged && show.许可事项类型 !== '新办') return;
+      if (hideChanged && isMiscOrHidden(show)) return;
       // 优先使用演出日期数据字段
       if (Array.isArray(show.演出日期数据) && show.演出日期数据.length > 0) {
         show.演出日期数据.forEach((dateStr: string) => {
@@ -44,7 +46,7 @@ export default function TimelinePage() {
       }
     });
     return map;
-  }, [days, selectedNats, hideChanged]);
+  }, [selectedNats, hideChanged, days]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 600);
@@ -82,7 +84,7 @@ export default function TimelinePage() {
               onChange={e => setHideChanged(e.target.checked)}
               style={{ accentColor: '#1976d2' }}
             />
-            隐藏变更
+            隐藏变更与杂项
           </label>
         </div>
       </div>
