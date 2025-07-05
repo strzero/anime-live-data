@@ -3,6 +3,8 @@ import './globals.css';
 import Link from 'next/link';
 import infoHistory from '@/data/info.json';
 import Script from 'next/script';
+import React from 'react';
+import CheckingUpdate from "@/components/CheckingUpdate";
 
 export const metadata = {
   title: 'Anime Live DB',
@@ -64,11 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {/* <Link href="/performer" style={{ color: '#fff' }}>演出者出演信息</Link> */}
             </nav>
           </div>
-          {lastInfo && (
-            <div className="last-update" style={{ fontSize: 12 }}>
-              上次更新时间：{lastInfo.检查时间} | 新增数量：{lastInfo.新增数量}
-            </div>
-          )}
+          <CheckingUpdate lastInfo={lastInfo} />
         </header>
         <main style={{ padding: 24 }}>{children}</main>
         <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee' }}>
