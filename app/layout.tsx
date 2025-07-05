@@ -40,6 +40,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 margin-bottom: 12px !important;
                 margin-right: 0 !important;
               }
+              .checking-bar {
+                display: none !important;
+              }
+              .checking-bar-mobile {
+                display: flex !important;
+              }
+            }
+            @media (min-width: 601px) {
+              .checking-bar-mobile {
+                display: none !important;
+              }
             }
           `}
         </style>
@@ -66,10 +77,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {/* <Link href="/performer" style={{ color: '#fff' }}>演出者出演信息</Link> */}
             </nav>
           </div>
-          <CheckingUpdate lastInfo={lastInfo} />
+          <span className="checking-bar"><CheckingUpdate lastInfo={lastInfo} /></span>
         </header>
         <main style={{ padding: 24 }}>{children}</main>
-        <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee' }}>
+        <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee', position: 'relative', color: '#222' }}>
+          <span className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', marginBottom: 8, color: '#222' }}>
+            <CheckingUpdate lastInfo={lastInfo} color="#222" />
+          </span>
           Developed by Star0
           <br />
           欢迎Star！<a href="https://github.com/strzero/anime-live-data" target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2' }}>

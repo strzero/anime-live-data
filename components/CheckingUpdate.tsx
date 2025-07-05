@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-export default function CheckingUpdate({ lastInfo }: { lastInfo: { 检查时间: string; 新增数量: number } | null }) {
+export default function CheckingUpdate({ lastInfo, color = '#fff' }: { lastInfo: { 检查时间: string; 新增数量: number } | null, color?: string }) {
   const [isChecking, setIsChecking] = useState(false);
   const [minutesLeft, setMinutesLeft] = useState(0);
 
@@ -18,7 +18,7 @@ export default function CheckingUpdate({ lastInfo }: { lastInfo: { 检查时间:
   }, []);
 
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', color: '#fff', fontSize: 12, lineHeight: '20px', verticalAlign: 'middle' }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', color, fontSize: 12, lineHeight: '20px', verticalAlign: 'middle' }}>
       {isChecking ? (
         <>
           <svg
@@ -31,14 +31,14 @@ export default function CheckingUpdate({ lastInfo }: { lastInfo: { 检查时间:
               cx="7"
               cy="7"
               r="6"
-              stroke="#fff"
+              stroke={color}
               strokeWidth="2"
               fill="none"
               opacity="0.3"
             />
             <path
               d="M7 1a6 6 0 0 1 6 6"
-              stroke="#fff"
+              stroke={color}
               strokeWidth="2"
               fill="none"
             />
