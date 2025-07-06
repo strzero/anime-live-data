@@ -88,17 +88,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main style={{ padding: 24 }}>{children}</main>
         <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee', position: 'relative', color: '#222' }}>
-          <span className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', color: '#222', flexDirection: 'column', alignItems: 'center' }}>
-            <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
-              下次检查：{lastCheck || '-'}
+          <div className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#888', fontSize: 15, lineHeight: '22px', marginBottom: 8 }}>
+            <span style={{ display: 'block' }}>
+              {lastInfo ? `下次检查：${new Date().getMinutes() < 5 ? '正在检查' : (60 - new Date().getMinutes()) + '分钟后'}` : '下次检查：-'}
             </span>
-            <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
-              上次更新：{lastUpdate || '-'}
+            <span style={{ display: 'block' }}>
+              {lastInfo ? `上次更新：${lastInfo.检查时间}` : '上次更新：-'}
             </span>
-            <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
-              今日新增：{newCount}
+            <span style={{ display: 'block' }}>
+              {lastInfo ? `新增数量：${lastInfo.新增数量}` : '新增数量：-'}
             </span>
-          </span>
+          </div>
           <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
             Developed by Star0
             <br />
