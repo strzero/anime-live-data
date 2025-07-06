@@ -19,15 +19,28 @@ const items = [
 
 function getLatestJapanShows() {
   const NATION_LIST = ['中国','日本','俄罗斯','英国','美国','中国台湾'];
-  return (showsData as Show[])
+  const filtered = (showsData as Show[])
     .filter(show => {
       const actorNats = show.出演者名单?.map(a =>
         NATION_LIST.includes(a.国籍) ? a.国籍 : '其他'
       ) || [];
       return actorNats.includes('日本') && show.许可事项类型 === '新办';
     })
-    .sort((a, b) => b.审批时间.localeCompare(a.审批时间))
-    .slice(0, 10);
+    .sort((a, b) => b.审批时间.localeCompare(a.审批时间));
+
+  const result: Show[] = [];
+  let i = 0;
+  while (i < filtered.length) {
+    const currentDate = filtered[i].审批时间;
+    const sameDayBatch = filtered.filter(show => show.审批时间 === currentDate);
+    // 如果当天的演出都已加入则跳过
+    if (!result.some(show => show.审批时间 === currentDate)) {
+      result.push(...sameDayBatch);
+    }
+    if (result.length >= 5) break;
+    i += sameDayBatch.length;
+  }
+  return result;
 }
 
 export default function HomePage() {
@@ -67,7 +80,7 @@ export default function HomePage() {
       </Box>
       <Box sx={{ mt: 6, mb: 4 }}>
         <Typography variant="h5" gutterBottom>最新信息</Typography>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ maxWidth: 910, margin: '0 auto' }}>
           <ShowTable shows={getLatestJapanShows()} />
         </div>
       </Box>
