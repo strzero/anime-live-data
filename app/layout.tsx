@@ -13,6 +13,10 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const lastInfo = infoHistory.length > 0 ? infoHistory[infoHistory.length - 1] : null;
+  const lastCheck = lastInfo ? lastInfo["检查时间"] : '';
+  const newCount = lastInfo ? lastInfo["新增数量"] : 0;
+  // 这里假设 infoHistory 至少有两条数据时，前一条为上次更新
+  const lastUpdate = infoHistory.length > 1 ? infoHistory[infoHistory.length - 2]["检查时间"] : '';
 
   return (
     <html lang="zh-CN">
@@ -84,8 +88,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main style={{ padding: 24 }}>{children}</main>
         <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee', position: 'relative', color: '#222' }}>
-          <span className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', color: '#222' }}>
-            <CheckingUpdate lastInfo={lastInfo} color="#222" />
+          <span className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', color: '#222', flexDirection: 'column', alignItems: 'center' }}>
+            <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
+              下次检查：{lastCheck || '-'}
+            </span>
+            <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
+              上次更新：{lastUpdate || '-'}
+            </span>
+            <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
+              今日新增：{newCount}
+            </span>
           </span>
           <span style={{ fontSize: 15, color: '#888', display: 'block' }}>
             Developed by Star0
