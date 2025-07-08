@@ -7,6 +7,7 @@ import { Show } from '@/components/ShowTable';
 import ShowDetailDialog from '@/components/ShowDetailDialog';
 import { getOfficialVenueName, getVenueMatchKeywords, stripVenueAddress } from '@/components/venueUtils';
 import { isMiscOrHidden } from '@/components/miscFilterUtils';
+import { fuzzyMatch } from '@/components/fuzzyMatch';
 
 export default function VenueTimelinePage() {
   const { name } = useParams() as { name: string };
@@ -24,7 +25,7 @@ export default function VenueTimelinePage() {
     const all = (showsData as Show[])
       .filter(s => keywords.some(k => s.演出场所?.includes(k)))
       .filter(s =>
-        (!search || s.演出名称.includes(search) || s.举办单位?.includes(search)) &&
+        (!search || fuzzyMatch(s.演出名称, search) || fuzzyMatch(s.举办单位 || '', search)) &&
         (!hideChanged || s.许可事项类型 === '新办') &&
         (!hideChanged || !isMiscOrHidden(s))
       )

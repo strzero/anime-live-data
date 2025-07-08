@@ -6,6 +6,7 @@ import { getAllOfficialVenues, getVenueMatchKeywords } from '@/components/venueU
 import { isMiscOrHidden } from '@/components/miscFilterUtils';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { fuzzyMatch } from '@/components/fuzzyMatch';
 
 export default function VenueListPage() {
   const [search, setSearch] = useState('');
@@ -44,7 +45,7 @@ export default function VenueListPage() {
   // 搜索过滤
   const filterRows = (rows: { 演出场所: string; 次数: number; id: number }[]) => {
     return (search.trim()
-      ? rows.filter(r => r.演出场所.toLowerCase().includes(search.trim().toLowerCase()))
+      ? rows.filter(r => fuzzyMatch(r.演出场所, search.trim()))
       : rows
     ).filter(r => {
       if (!hideChanged) return true;

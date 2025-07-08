@@ -5,6 +5,7 @@ import ShowDetailDialog from '@/components/ShowDetailDialog';
 import showsData from '@/data/data.json';
 import { getOfficialVenueName, stripVenueAddress } from '@/components/venueUtils';
 import { isMiscOrHidden } from '@/components/miscFilterUtils';
+import { fuzzyMatch } from '@/components/fuzzyMatch';
 
 export default function ShowsPage() {
   const [searchText, setSearchText] = useState('');
@@ -25,7 +26,7 @@ export default function ShowsPage() {
 
   const filteredShows = useMemo<Show[]>(() => {
     return (showsData as Show[]).filter(show => {
-      if (searchText && !show.演出名称.includes(searchText)) return false;
+      if (searchText && !fuzzyMatch(show.演出名称, searchText)) return false;
       if (selectedNats.length > 0) {
         const actorNats = show.出演者名单?.map(a => mapNation(a.国籍)) || [];
         if (!actorNats.some(n => selectedNats.includes(n))) return false;
