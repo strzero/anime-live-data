@@ -26,7 +26,14 @@ export default function ShowsPage() {
 
   const filteredShows = useMemo<Show[]>(() => {
     return (showsData as Show[]).filter(show => {
-      if (searchText && !fuzzyMatch(show.演出名称, searchText)) return false;
+      if (
+        searchText &&
+        !(
+          fuzzyMatch(show.演出名称, searchText) ||
+          fuzzyMatch(show.演出场所 || '', searchText) ||
+          fuzzyMatch(show.举办单位 || '', searchText)
+        )
+      ) return false;
       if (selectedNats.length > 0) {
         const actorNats = show.出演者名单?.map(a => mapNation(a.国籍)) || [];
         if (!actorNats.some(n => selectedNats.includes(n))) return false;
