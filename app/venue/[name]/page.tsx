@@ -42,8 +42,8 @@ export default function VenueTimelinePage() {
           };
         })
       );
-    const futureRows = all.filter(r => r.dateObj >= now);
-    const pastRows = all.filter(r => r.dateObj < now);
+    const futureRows = all.filter(r => r.dateObj >= now).sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
+    const pastRows = all.filter(r => r.dateObj < now).sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
     return { futureRows, pastRows };
   }, [keywords, search, hideChanged]);
 
