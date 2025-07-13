@@ -89,9 +89,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main style={{ padding: 24 }}>{children}</main>
         <footer style={{ textAlign: 'center', padding: 16, borderTop: '1px solid #eee', position: 'relative', color: '#222' }}>
           <div className="checking-bar-mobile" style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#888', fontSize: 15, lineHeight: '22px', marginBottom: 8 }}>
-            <span style={{ display: 'block' }}>
+            {/* <span style={{ display: 'block' }}>
               {lastInfo ? `下次检查：${new Date().getMinutes() < 5 ? '正在检查' : (60 - new Date().getMinutes()) + '分钟后'}` : '下次检查：-'}
-            </span>
+            </span> */}
             <span style={{ display: 'block' }}>
               {lastInfo ? `上次更新：${lastInfo.检查时间}` : '上次更新：-'}
             </span>
