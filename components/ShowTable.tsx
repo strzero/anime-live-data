@@ -20,6 +20,7 @@ export interface Show {
   许可事项: string;
   许可事项类型: string;
   演出日期: string;
+  演出日期数据?: string[];
   出演者人数: string;
   场次: string;
   演出内容: string;
