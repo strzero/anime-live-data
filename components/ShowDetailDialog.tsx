@@ -61,7 +61,7 @@ export default function ShowDetailDialog({
         )}
       </DialogTitle>
       <DialogContent>
-        <Card elevation={2} style={{ marginBottom: 16 }}>
+        <Card elevation={2} variant="outlined" sx={{ marginBottom: 2, background: '#fff', boxShadow: 2 }}>
           <CardContent>
             <Typography><strong>演出场所：</strong>{show.演出场所}</Typography>
             <Typography><strong>举办单位：</strong>{show.举办单位}</Typography>
@@ -80,7 +80,7 @@ export default function ShowDetailDialog({
             </Typography>
           </CardContent>
         </Card>
-        <Card elevation={2}>
+        <Card elevation={2} variant="outlined" sx={{ marginBottom: 2, background: '#fff', boxShadow: 2 }}>
           <CardContent>
             <Typography variant="h6">出演者名单</Typography>
               {show.出演者名单?.map((actor, idx) => (
