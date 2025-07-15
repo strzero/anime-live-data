@@ -7,6 +7,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import { useMediaQuery } from '@mui/material';
 
 interface Actor {
   姓名: string;
@@ -37,9 +40,26 @@ export default function ShowDetailDialog({
   show: Show;
   onClose: () => void;
 }) {
+  const isMobile = useMediaQuery('(max-width:600px)');
   return (
-    <Dialog open onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>{show.演出名称}</DialogTitle>
+    <Dialog open onClose={onClose} maxWidth="md" fullWidth fullScreen={isMobile}>
+      <DialogTitle sx={{ position: 'relative', pr: isMobile ? 6 : undefined }}>
+        {show.演出名称}
+        {isMobile && (
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        )}
+      </DialogTitle>
       <DialogContent>
         <Card elevation={2} style={{ marginBottom: 16 }}>
           <CardContent>
