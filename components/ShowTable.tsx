@@ -1,6 +1,6 @@
 'use client';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import ShowDetailDialog from './ShowDetailDialog';
 import { getOfficialVenueName, stripVenueAddress } from './venueUtils';
@@ -43,6 +43,25 @@ export default function ShowTable({ shows, isMobile = false, hideChanged }: { sh
       return true;
     });
   }, [shows, hideChanged]);
+
+  useEffect(() => {
+    const lockScroll = () => {
+      if (openShow && window.innerWidth < 600) {
+        document.documentElement.style.overflow = 'hidden';
+      } else {
+        document.documentElement.style.overflow = '';
+      }
+    };
+
+    lockScroll();
+
+    // 监听窗口大小变化，实时处理滚动锁定（可选）
+    window.addEventListener('resize', lockScroll);
+    return () => {
+      document.documentElement.style.overflow = '';
+      window.removeEventListener('resize', lockScroll);
+    };
+  }, [openShow]);
 
   const columns: GridColDef[] = [
     {

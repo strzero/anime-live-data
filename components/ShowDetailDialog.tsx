@@ -55,7 +55,7 @@ export default function ShowDetailDialog({
     <Dialog open onClose={onClose} maxWidth="md" fullWidth fullScreen={isMobile}>
       <DialogTitle sx={{ position: 'relative', pr: isMobile ? 6 : undefined }}>
         {show.演出名称}
-        {isMobile && (
+        {true && (
           <IconButton
             aria-label="close"
             onClick={onClose}
@@ -84,6 +84,7 @@ export default function ShowDetailDialog({
               </Typography>
             ) : null}
             <Typography><strong>演出日期：</strong>{show.演出日期}</Typography>
+            <Typography><strong>举办单位：</strong>{show.举办单位}</Typography>
             <Typography><strong>演员人数：</strong>{show.出演者人数}</Typography>
             <Typography><strong>场次：</strong>{show.场次}</Typography>
           </CardContent>
@@ -105,7 +106,6 @@ export default function ShowDetailDialog({
                 </Link>
               )}
             </Typography>
-            <Typography><strong>举办单位：</strong>{show.举办单位}</Typography>
             <Typography><strong>许可事项：</strong>{show.许可事项}</Typography>
             <Typography><strong>许可事项类型：</strong>{show.许可事项类型}</Typography>
             <Typography><strong>演出内容：</strong>{show.演出内容}</Typography>
