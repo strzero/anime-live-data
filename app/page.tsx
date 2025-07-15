@@ -25,7 +25,6 @@ function getLatestJapanShows() {
       const actorNats = show.出演者名单?.map(a =>
         NATION_LIST.includes(a.国籍) ? a.国籍 : '其他'
       ) || [];
-      // 保留日本且是新办演出，且不是杂项
       return actorNats.includes('日本') 
         && show.许可事项类型 === '新办' 
         && !isMiscOrHidden(show);
@@ -48,32 +47,55 @@ function getLatestJapanShows() {
 
 export default function HomePage() {
   return (
-    <Box sx={{ textAlign: 'center', mt: 6, px: 2 }}>
-      <Typography variant="h3" gutterBottom>
+    <Box
+      sx={{
+        textAlign: 'center',
+        mt: { xs: 1.25, sm: 6 }, // 10px on mobile
+        mb: { xs: 1.25, sm: 6 },
+        px: { xs: 1.5, sm: 2 },  // 12px on mobile
+      }}
+    >
+      <Typography
+        variant="h3"
+        gutterBottom
+        sx={{
+          fontSize: { xs: '1.8rem', sm: '3rem' },
+          mb: { xs: 2, sm: 3 },
+        }}
+      >
         Anime Live DB
       </Typography>
-      {/* CSS Grid 布局 */}
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: 4,
-          mt: 4,
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fit, minmax(240px, 1fr))' },
+          gap: { xs: 2, sm: 4 }, // less gap on mobile
+          mt: { xs: 2, sm: 4 },
         }}
       >
         {items.map((item) => (
-          <Card key={item.href} elevation={3}>
+          <Card
+            key={item.href}
+            elevation={3}
+          >
             <CardActionArea component={Link} href={item.href}>
               <CardContent
                 sx={{
                   display: 'flex',
-                  flexDirection: 'column',
+                  flexDirection: { xs: 'row', sm: 'column' }, // 小屏横向排列，大屏竖排
                   alignItems: 'center',
-                  py: 4,
+                  justifyContent: 'center', // 水平居中
+                  py: { xs: 1.5, sm: 4 }, // 小屏padding减少
+                  gap: { xs: 1, sm: 0 }, // 图标和文字间距
                 }}
               >
                 {item.icon}
-                <Typography variant="h6" sx={{ mt: 2 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    mt: 0, // 小屏无顶部margin
+                  }}
+                >
                   {item.title}
                 </Typography>
               </CardContent>
@@ -81,11 +103,30 @@ export default function HomePage() {
           </Card>
         ))}
       </Box>
-      <Box sx={{ mt: 6, mb: 4 }}>
-        <Typography variant="h5" gutterBottom>最新信息</Typography>
-        <div style={{ maxWidth: 910, margin: '0 auto' }}>
+      <Box
+        sx={{
+          mt: { xs: 3, sm: 6 },
+          mb: { xs: 2, sm: 4 },
+          px: { xs: 0, sm: 0 },
+        }}
+      >
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{
+            fontSize: { xs: '1.2rem', sm: '1.5rem' },
+          }}
+        >
+          最新信息
+        </Typography>
+        <Box
+          sx={{
+            maxWidth: 910,
+            mx: 'auto',
+          }}
+        >
           <ShowTable shows={getLatestJapanShows()} />
-        </div>
+        </Box>
       </Box>
     </Box>
   );
