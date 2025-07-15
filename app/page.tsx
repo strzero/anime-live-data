@@ -37,7 +37,7 @@ function getLatestJapanShows() {
     if (!result.some(show => show.审批时间 === currentDate)) {
       result.push(...sameDayBatch);
     }
-    if (result.length >= 5) break;
+    if (result.length >= 10) break;
     i += sameDayBatch.length;
   }
   return result;
