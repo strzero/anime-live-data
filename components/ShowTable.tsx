@@ -11,14 +11,16 @@ export interface Actor {
 }
 
 export interface Show {
+  受理编号: string;
+  批文号: string;
+  许可证号: string;
   演出名称: string;
-  演出日期: string;
-  演出日期数据?: string[];
   演出场所: string;
   举办单位: string;
   许可事项: string;
   许可事项类型: string;
-  演员人数: string;
+  演出日期: string;
+  出演者人数: string;
   场次: string;
   演出内容: string;
   审批时间: string;
